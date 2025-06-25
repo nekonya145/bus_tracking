@@ -14,5 +14,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(UserSeed::class);
         $this->call(RouteSeed::class);
+        $this->call(BusSeed::class);
     }
 }

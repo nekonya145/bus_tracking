@@ -44,4 +44,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function buses()
+    {
+        return $this->hasOne(Bus::class, 'driver_id');
+    }
 }
