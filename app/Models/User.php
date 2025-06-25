@@ -45,7 +45,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function buses()
+    public function bus()
     {
         return $this->hasOne(Bus::class, 'driver_id');
     }

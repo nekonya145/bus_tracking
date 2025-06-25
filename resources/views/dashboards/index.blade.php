@@ -23,7 +23,7 @@
             <div class="text-center text-black">
               <div class="d-flex align-items-center justify-content-center" style="border-radius: 50%; height: 6rem; width: 6rem; background: #172b4d;">
               <div class="d-flex align-items-center justify-content-center" style="border-radius: 50%; height: 5rem; width: 5rem; background: #ffffff;">
-                <p class="m-0 fw-bolder fs-5" style="color: black" id="jumlahBus">0</p>
+                <p class="m-0 fw-bolder fs-5" style="color: black" id="jumlahBus">{{ $jumlah_bus }}</p>
               </div>
               </div>
               <p class="m-0">Jumlah Bus</p>
@@ -33,7 +33,7 @@
             <div class="text-center text-black">
               <div class="d-flex align-items-center justify-content-center" style="border-radius: 50%; height: 6rem; width: 6rem; background: #172b4d;">
               <div class="d-flex align-items-center justify-content-center" style="border-radius: 50%; height: 5rem; width: 5rem; background: #ffffff;">
-                <p class="m-0 fw-bolder fs-5" style="color: black" id="jumlahRoute">0</p>
+                <p class="m-0 fw-bolder fs-5" style="color: black" id="jumlahRoute">{{ $jumlah_route }}</p>
               </div>
               </div>
               <p class="m-0">Jumlah Rute</p>
@@ -43,7 +43,7 @@
             <div class="text-center text-black">
               <div class="d-flex align-items-center justify-content-center" style="border-radius: 50%; height: 6rem; width: 6rem; background: #172b4d;">
               <div class="d-flex align-items-center justify-content-center" style="border-radius: 50%; height: 5rem; width: 5rem; background: #ffffff;">
-                <p class="m-0 fw-bolder fs-5" style="color: black" id="jumlahSiswa">0</p>
+                <p class="m-0 fw-bolder fs-5" style="color: black" id="jumlahSiswa">{{ $jumlah_siswa }}</p>
               </div>
               </div>
               <p class="m-0">Jumlah Siswa</p>
@@ -59,46 +59,55 @@
         <div class="col-12 col-sm-8 col-lg-6">
         <div class="rounded p-3 mx-2 shadow-lg" style="background: #f5eedc">
           <h4>Live Map</h4>
-
             <div id="map" class="rounded" style="min-height: 50vh;"></div>
             <script>
-            const map = L.map('map').setView([-4.132041466037736, 120.03455798756075], 15);
+            const busses = @json($buses);
+            const map = L.map('map');
             const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 20,
-                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+              maxZoom: 20,
             }).addTo(map);
 
             const busIcon = L.icon({
-                iconUrl: '{{ asset('img/marker.png') }}',
-                iconSize: [38, 38],
-                iconAnchor: [20, 20],
-                popupAnchor: [0, -20],
+              iconUrl: '{{ asset('img/marker.png') }}',
+              iconSize: [38, 38],
+              iconAnchor: [20, 20],
+              popupAnchor: [0, -20],
             });
 
-            const busses = {!! json_encode($busses) !!};
-            const routes = {!! json_encode($routes) !!};
-            const siswas = {!! json_encode($siswas) !!};
+            const statusColor = {
+              'TERSEDIA': 'green',
+              'FULL': 'red',
+              'MAINTENANCE': 'orange',
+            };
 
-            document.getElementById('jumlahBus').textContent = `${Object.keys(busses).length}`;
-            document.getElementById('jumlahRoute').textContent = `${Object.keys(routes).length}`;
-            document.getElementById('jumlahSiswa').textContent = `${Object.keys(siswas).length}`;
+            const bounds = [];
 
-            Object.entries(busses).forEach(([key, bus]) => {
-              const [lat, lng] = bus.koordinat.split(',').map(coord => parseFloat(coord.trim()));
-              const marker = L.marker([lat, lng], { icon: busIcon }).addTo(map);
-              const routeInfo = routes[bus.route_id] || {};
-
-              L.marker([lat, lng], {icon: busIcon})
-                  .addTo(map)
-                  .bindPopup(`<b>${bus.namabus}</b><br>${routeInfo.rute}<br>${bus.status}`);
+            busses.forEach(bus => {
+              const lat = parseFloat(bus.latitude);
+              const lng = parseFloat(bus.longitude);
+              bounds.push([lat, lng]); // ← ini penting
+              L.marker([lat, lng], { icon: busIcon })
+                .addTo(map)
+                .bindPopup(`
+                  <b>${bus.nama_bus}</b><br>
+                  Rute: ${bus.route?.rute ?? '-'}<br>
+                  Status: <span style="color:${statusColor[bus.status] ?? 'black'}">${bus.status}</span>
+                `);
             });
 
+            //AUTO DEFUALT MAPS REDIRECT Y,X
+            if (bounds.length > 0) {
+                map.fitBounds(bounds, {
+                  padding: [50, 50],
+                  maxZoom: 16
+                });
+            } else {
+              map.setView([-5.135399, 119.423790], 15);
+            }
             </script>
-
+        </div>
         </div>
     </div>
-
   @include('partials/footer')
-  </div>
 
 </x-layout>
