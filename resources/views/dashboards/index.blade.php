@@ -61,49 +61,73 @@
           <h4>Live Map</h4>
             <div id="map" class="rounded" style="min-height: 50vh;"></div>
             <script>
-            const busses = @json($buses);
-            const map = L.map('map');
-            const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-              maxZoom: 20,
-            }).addTo(map);
+              const map = L.map('map');
+              const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 20,
+              }).addTo(map);
 
-            const busIcon = L.icon({
-              iconUrl: '{{ asset('img/marker.png') }}',
-              iconSize: [38, 38],
-              iconAnchor: [20, 20],
-              popupAnchor: [0, -20],
-            });
+              const busIcon = L.icon({
+                iconUrl: '{{ asset('img/marker.png') }}',
+                iconSize: [38, 38],
+                iconAnchor: [20, 20],
+                popupAnchor: [0, -20],
+              });
 
-            const statusColor = {
-              'TERSEDIA': 'green',
-              'FULL': 'red',
-              'MAINTENANCE': 'orange',
-            };
+              const statusColor = {
+                'TERSEDIA': 'green',
+                'FULL': 'red',
+                'MAINTENANCE': 'orange',
+              };
 
-            const bounds = [];
+              const busMarkers = {}; // Menyimpan marker per bus.id
+              let mapInitialized = false;
 
-            busses.forEach(bus => {
-              const lat = parseFloat(bus.latitude);
-              const lng = parseFloat(bus.longitude);
-              bounds.push([lat, lng]); // ← ini penting
-              L.marker([lat, lng], { icon: busIcon })
-                .addTo(map)
-                .bindPopup(`
-                  <b>${bus.nama_bus}</b><br>
-                  Rute: ${bus.route?.rute ?? '-'}<br>
-                  Status: <span style="color:${statusColor[bus.status] ?? 'black'}">${bus.status}</span>
-                `);
-            });
+              function loadBusPositions() {
+                fetch('/api/koordinat-bus')
+                  .then(res => res.json())
+                  .then(busses => {
+                    const bounds = [];
 
-            //AUTO DEFUALT MAPS REDIRECT Y,X
-            if (bounds.length > 0) {
-                map.fitBounds(bounds, {
-                  padding: [50, 50],
-                  maxZoom: 16
-                });
-            } else {
-              map.setView([-5.135399, 119.423790], 15);
-            }
+                    busses.forEach(bus => {
+                      const lat = parseFloat(bus.latitude);
+                      const lng = parseFloat(bus.longitude);
+                      bounds.push([lat, lng]);
+
+                      if (busMarkers[bus.id]) {
+                        // Update posisi marker jika sudah ada
+                        busMarkers[bus.id].setLatLng([lat, lng]);
+                      } else {
+                        // Buat marker baru
+                        const marker = L.marker([lat, lng], { icon: busIcon })
+                          .addTo(map)
+                          .bindPopup(`
+                            <b>${bus.nama_bus}</b><br>
+                            Rute: ${bus.route?.rute ?? '-'}<br>
+                            Status: <span style="color:${statusColor[bus.status] ?? 'black'}">${bus.status}</span>
+                          `);
+                        busMarkers[bus.id] = marker;
+                      }
+                    });
+
+                    if (!mapInitialized) {
+                      if (bounds.length > 0) {
+                        map.fitBounds(bounds, {
+                          padding: [50, 50],
+                          maxZoom: 16
+                        });
+                      } else {
+                        map.setView([-5.135399, 119.423790], 15);
+                      }
+                      mapInitialized = true;
+                    }
+                  });
+              }
+
+              // Load pertama kali
+              loadBusPositions();
+
+              // Polling tiap 3 detik
+              setInterval(loadBusPositions, 3000);
             </script>
         </div>
         </div>

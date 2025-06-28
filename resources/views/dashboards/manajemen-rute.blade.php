@@ -5,54 +5,31 @@
   <h4 class="text-end me-4">Manajemen Jadwal</h4>
   <div class="rounded my-2 d-flex align-items-center" style="min-height: 80vh; background-color: rgba(184, 192, 224, 0.5);">
     <div class="container">
-    @if(session()->has('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <p class="text-white mb-0">{{ session('success') }}</p>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    @endif
     {{-- BARIS PERTAMA --}}
     <div class="row align-items-center justify-content-center px-3 pb-3">
-      <h4>List Data Bus</h4>
+      <h4>List Data Rute</h4>
       <div class="card">
         <div class="table-responsive">
           <table class="table align-items-center mb-0">
             <thead>
-              <tr>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Rute Bus</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Hari</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Waktu Berangkat</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Waktu Pulang</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
-                <th class="text-secondary opacity-7"></th>
-              </tr>
+                <tr>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Rute Bus</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Waktu Start</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Waktu Finish</th>
+                  <th class="text-secondary opacity-7"></th>
+                </tr>
             </thead>
             <tbody>
               @foreach ($routes as $route)
               <tr>
                 <td>
-                  <p class="text-sm font-weight-bold mb-0">{{ $route['nama'] }}</p>
-                  <p class="text-xs text-secondary mb-0">({{ $route['rute'] }})</p>
-                </td>
-                <td>
-                  <span class="text-xs font-weight-bold">
-                    {{ $route['hari'] }}
-                  </span>
+                  <span class="text-xs font-weight-bold">{{ $route->nama_rute }}</span>
                 </td>
                 <td class="align-middle text-center text-sm">
-                  <span class="text-xs font-weight-bold">
-                    {{ $route['time-start'] }}
-                  </span>
+                  <span class="text-xs font-weight-bold">{{ $route->time_start }}</span>
                 </td>
                 <td class="align-middle text-center text-sm">
-                  <span class="text-xs font-weight-bold">
-                    {{ $route['time-end'] }}
-                  </span>
-                </td>
-                <td class="align-middle text-center text-sm">
-                  <span class="text-xs font-weight-bold">
-                    {{ $route['aksesibilitas'] }}
-                  </span>
+                  <span class="text-xs font-weight-bold">{{ $route->time_end }}</span>
                 </td>
                 <td class="align-middle">
                   <a href="#" class="text-primary font-weight-bold text-xs me-2" data-bs-toggle="modal" data-bs-target="#editJadwalBus">Edit</a>

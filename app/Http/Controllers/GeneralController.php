@@ -26,6 +26,8 @@ class GeneralController
     
     public function live_monitoring()
     {
-
+        return view('dashboards.live-monitoring', [
+            "namepage"      => "Live Monitoring",
+        ]);
     }
 }

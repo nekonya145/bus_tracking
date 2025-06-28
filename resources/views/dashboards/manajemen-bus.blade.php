@@ -11,44 +11,64 @@
       <div class="card">
         <div class="table-responsive">
           <table class="table align-items-center mb-0">
-            <thead>
-              <tr>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Plat</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Rute</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Driver</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Status</th>
-                <th class="text-secondary opacity-7"></th>
-              </tr>
-            </thead>
-            <tbody>
-              @foreach ($busses as $bus)
-                @php
-                $route = $routes[$bus['route_id']] ?? null;
-                $driver = $drivers[$bus['driver_id']] ?? null;
-                @endphp
-              <tr>
-                <td>
-                  <h6 class="mb-0 text-sm">{{ $bus['plat'] }}</h6>
-                </td>
-                <td>
-                  <p class="text-sm font-weight-bold mb-0">{{ $route['nama'] }}</p>
-                  <p class="text-xs text-secondary mb-0">({{ $route['rute'] }})</p>
-                </td>
-                <td>
-                  <h6 class="mb-0 text-sm">{{ $driver['nama'] }}</h6>
-                </td>
-                <td class="align-middle text-center text-sm">
-                  <span class="text-xs font-weight-bold">
-                    {{ $bus['status'] }}
-                  </span>
-                </td>
-                <td class="align-middle">
-                  <a href="#" class="text-primary font-weight-bold text-xs me-2" data-bs-toggle="modal" data-bs-target="#editBus">Edit</a>
-                  <a href="#" class="text-danger font-weight-bold text-xs" onclick="return confirm('Yakin ingin menghapus?')">Hapus</a>
-                </td>
-              </tr>
-              @endforeach
-            </tbody>
+              <thead>
+                  <tr>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Plat</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Bus</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Rute</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Driver</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Status</th>
+                      <th class="text-secondary opacity-7"></th>
+                  </tr>
+              </thead>
+              <tbody>
+                  @forelse ($buses as $bus)
+                  <tr>
+                      <td>
+                          <h6 class="mb-0 text-sm">{{ $bus->plat }}</h6>
+                      </td>
+                      <td>
+                          <h6 class="mb-0 text-sm">{{ $bus->nama_bus }}</h6>
+                      </td>
+                      <td>
+                          <p class="text-sm font-weight-bold mb-0">{{ $bus->route?->nama_rute ?? 'Tanpa Rute' }}</p>
+                          <p class="text-xs text-secondary mb-0">({{ $bus->route?->time_start }} - {{ $bus->route->time_end }})</p>
+                      </td>
+                      <td>
+                          <h6 class="mb-0 text-sm">{{ $bus->driver?->name ?? '-' }}</h6>
+                      </td>
+                      <td class="align-middle text-center text-sm">
+                          @if($bus->status == 'TERSEDIA')
+                              <span class="badge badge-sm bg-gradient-info">TERSEDIA</span>
+                          @elseif($bus->status == 'FULL')
+                              <span class="badge badge-sm bg-gradient-warning">FULL</span>
+                          @elseif($bus->status == 'MAINTENANCE')
+                              <span class="badge badge-sm bg-gradient-secondary">MAINTENANCE</span>
+                          @endif
+                      </td>
+                      <td class="align-middle">
+                          {{-- <a href="#"
+                            class="text-primary font-weight-bold text-xs me-2 edit-bus-btn"
+                            data-bs-toggle="modal"
+                            data-bs-target="#editBusModal"
+                            data-id="{{ $bus->id }}"
+                            data-nama_bus="{{ $bus->nama_bus }}"
+                            data-plat="{{ $bus->plat }}"
+                            data-action="{{ route('bus.update', $bus->id) }}">
+                              Edit
+                          </a> --}}
+                          <a href="{{-- route('bus.destroy', $bus->id) --}}" class="text-danger font-weight-bold text-xs" onclick="return confirm('Yakin ingin menghapus bus plat {{ $bus->plat }}?')">Hapus</a>
+                      </td>
+                  </tr>
+                  @empty
+                  {{-- Ini akan ditampilkan jika tidak ada data bus sama sekali --}}
+                  <tr>
+                      <td colspan="5" class="text-center py-4">
+                          <p class="text-secondary mb-0">Belum ada data bus yang ditambahkan.</p>
+                      </td>
+                  </tr>
+                  @endforelse
+              </tbody>
           </table>
         </div>
       </div>
@@ -84,28 +104,65 @@
       </div>
     </div>
 
-    <div class="modal fade" id="editBus" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <form action="/tambah-bus" method="POST">
-            @csrf
-            <div class="modal-header">
-              <h5 class="modal-title" id="modalTambahBusLabel">Edit Bus</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal fade" id="editBusModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="editBusForm" action="" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editBusModalLabel">Edit Bus</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="edit_nama_bus" class="form-label">Nama Bus</label>
+                            <input type="text" id="edit_nama_bus" name="nama_bus" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_plat" class="form-label">Plat Nomor</label>
+                            <input type="text" id="edit_plat" name="plat" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    </div>
+                </form>
             </div>
-            <div class="modal-body">
-              <input type="text" name="nama_bus" class="form-control" placeholder="Nama Bus">
-            </div>
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-primary">Simpan</button>
-            </div>
-          </form>
         </div>
-      </div>
     </div>
     
   </div>
   @include('partials/footer')
   </div>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+      // Tangkap event saat modal akan ditampilkan
+      const editBusModal = document.getElementById('editBusModal');
+      editBusModal.addEventListener('show.bs.modal', function (event) {
+          // Tombol yang memicu modal
+          const button = event.relatedTarget;
+
+          // Ambil data dari atribut data-*
+          const namaBus = button.getAttribute('data-nama_bus');
+          const plat = button.getAttribute('data-plat');
+          const action = button.getAttribute('data-action');
+
+          // Dapatkan elemen form dan input di dalam modal
+          const modalForm = editBusModal.querySelector('#editBusForm');
+          const modalInputNamaBus = editBusModal.querySelector('#edit_nama_bus');
+          const modalInputPlat = editBusModal.querySelector('#edit_plat');
+          const modalTitle = editBusModal.querySelector('.modal-title');
+
+          // Update action form dan value dari input
+          modalForm.action = action;
+          modalInputNamaBus.value = namaBus;
+          modalInputPlat.value = plat;
+          modalTitle.textContent = 'Edit Bus: ' + plat;
+      });
+  });
+  </script>
 
 </x-layout>

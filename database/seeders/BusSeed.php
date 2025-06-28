@@ -35,6 +35,16 @@ class BusSeed extends Seeder
                 'route_id'      => '2',
                 'created_at'    => '2020-03-07 20:05:21',
             ],
+            [
+                'nama_bus'      => 'SRT C4',
+                'plat'          => 'DD 1024 AC',
+                'latitude'      => '-5.131569',
+                'longitude'     => '119.514876',
+                'status'        => 'MAINTENANCE',
+                'driver_id'     => null,
+                'route_id'      => '1',
+                'created_at'    => '2020-03-07 20:05:21',
+            ],
         ];
 
         foreach ($buses as $bus){
