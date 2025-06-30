@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Bus;
 use Illuminate\Http\Request;
 use App\Http\Resources\BusResource;
+use App\Models\Route;
+use App\Models\User;
 
 class BusApiController extends Controller
 {
@@ -23,8 +25,9 @@ class BusApiController extends Controller
             'data' => [
                 'buses'             => $formattedBuses,
                 'report_summary'    => [ 
-                    'total_bus'     => Bus::count(),
-                    //Tambahkan lain untuk yang lain
+                    'total_buses'   => Bus::count(),
+                    'total_routes'  => Route::count(),
+                    'total_siswas'  => User::where('role', 'siswa')->count(),
                 ]
             ]
         ]);

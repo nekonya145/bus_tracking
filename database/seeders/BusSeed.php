@@ -18,8 +18,8 @@ class BusSeed extends Seeder
             [
                 'nama_bus'      => 'SRT A2',
                 'plat'          => 'DD 55 XYZ',
-                'latitude'      => '-5.131969',
-                'longitude'     => '119.514976',
+                'latitude'      => '-5.132969',
+                'longitude'     => '119.515476',
                 'status'        => 'TERSEDIA',
                 'driver_id'     => '2',
                 'route_id'      => '1',
