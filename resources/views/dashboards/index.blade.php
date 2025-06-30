@@ -102,7 +102,7 @@
                           .addTo(map)
                           .bindPopup(`
                             <b>${bus.nama_bus}</b><br>
-                            Rute: ${bus.nama_route}<br>
+                            Rute: ${bus.nama_route ?? 'Tanpa Rute'}<br>
                             Status: <span style="color:${statusColor[bus.status] ?? 'black'}">${bus.status}</span>
                           `);
                         busMarkers[bus.id] = marker;

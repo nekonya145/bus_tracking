@@ -20,11 +20,11 @@ class BusResource extends JsonResource
             'plat' => $this->plat,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
-            'nama_route' => $this->route->nama_rute,
+            'nama_route' => $this->route->nama_rute ?? '-',
             'nama_driver' => optional($this->driver)->name,
             'status' => $this->status,
-            'time_start' => $this->route->time_start,
-            'time_end' => $this->route->time_end,
+            'time_start' => $this->route->time_start ?? '-',
+            'time_end' => $this->route->time_end ?? '-',
         ];
     }
 }
