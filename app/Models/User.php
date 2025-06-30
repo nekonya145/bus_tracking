@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable
 {
@@ -48,5 +49,12 @@ class User extends Authenticatable
     public function bus()
     {
         return $this->hasOne(Bus::class, 'driver_id');
+    }
+
+    protected function image(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($image) => url('/storage/products/' . $image),
+        );
     }
 }

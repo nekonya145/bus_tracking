@@ -83,17 +83,19 @@
               let mapInitialized = false;
 
               function loadBusPositions() {
-                fetch('/api/koordinat-bus')
+                fetch('/api/buses')
                   .then(res => res.json())
-                  .then(busses => {
+                  .then(response => {
+
+                    const busData = response.data.buses;
                     const bounds = [];
 
-                    busses.forEach(bus => {
-                      const lat = parseFloat(bus.latitude);
-                      const lng = parseFloat(bus.longitude);
-                      bounds.push([lat, lng]);
+                    busData.forEach(bus => {
+                    const lat = parseFloat(bus.latitude);
+                    const lng = parseFloat(bus.longitude);
+                    bounds.push([lat, lng]);
 
-                      if (busMarkers[bus.id]) {
+                    if (busMarkers[bus.id]) {
                         // Update posisi marker jika sudah ada
                         busMarkers[bus.id].setLatLng([lat, lng]);
                       } else {
