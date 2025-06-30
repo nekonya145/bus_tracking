@@ -6,7 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Bus extends Model
 {
-    // Otomatis eager load driver dan route
+    protected $fillable = [
+        'nama_bus',
+        'plat',
+        'latitude',
+        'longitude',
+        'status',
+        'driver_id',
+        'route_id',
+    ];
+    
     protected $with = ['driver', 'route'];
 
     public function driver()

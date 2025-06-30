@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreignId('driver_id')->nullable()
                   ->constrained('users')
                   ->onDelete('set null');
-            $table->foreignId('route_id')
+            $table->foreignId('route_id')->nullable()
                   ->constrained('routes')
                   ->onDelete('restrict');
             $table->timestamps();

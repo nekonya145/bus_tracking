@@ -15,4 +15,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/rute-bus', [BusController::class, 'manajemen_rute']);
     Route::post('/tambah-rute', [BusController::class, 'tambah_rute']);
     Route::get('/live-monitoring', [GeneralController::class, 'live_monitoring']);
+
+    Route::put('/bus/{id}', [BusController::class, 'update'])->name('bus.update');
+    Route::post('/bus/{id}', [BusController::class, 'tambah_bus'])->name('bus.store');
+    Route::delete('/bus/{id}', [BusController::class, 'hapus'])->name('bus.destroy');
 });
