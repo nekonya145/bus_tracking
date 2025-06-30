@@ -16,7 +16,7 @@ class RouteSeed extends Seeder
     {
         $routes = [
             [
-                'nama_rute'         => 'Rute Awal',
+                'nama_rute'         => 'Rute ACZ 175',
                 'sekolah_latitude'  => '-5.136723',
                 'sekolah_longitude' => '119.514976',
                 'p1_latitude'       => '-5.131969',
@@ -30,7 +30,7 @@ class RouteSeed extends Seeder
                 'created_at'        => '2020-03-07 20:05:21',
             ],
             [
-                'nama_rute'         => 'Rute Kedua',
+                'nama_rute'         => 'Rute PXT 86',
                 'sekolah_latitude'  => '-5.136723',
                 'sekolah_longitude' => '119.514976',
                 'p1_latitude'       => '-5.131969',

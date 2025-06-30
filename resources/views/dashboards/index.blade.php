@@ -96,15 +96,13 @@
                     bounds.push([lat, lng]);
 
                     if (busMarkers[bus.id]) {
-                        // Update posisi marker jika sudah ada
                         busMarkers[bus.id].setLatLng([lat, lng]);
                       } else {
-                        // Buat marker baru
                         const marker = L.marker([lat, lng], { icon: busIcon })
                           .addTo(map)
                           .bindPopup(`
                             <b>${bus.nama_bus}</b><br>
-                            Rute: ${bus.route?.rute ?? '-'}<br>
+                            Rute: ${bus.nama_route}<br>
                             Status: <span style="color:${statusColor[bus.status] ?? 'black'}">${bus.status}</span>
                           `);
                         busMarkers[bus.id] = marker;
@@ -125,10 +123,8 @@
                   });
               }
 
-              // Load pertama kali
               loadBusPositions();
 
-              // Polling tiap 3 detik
               setInterval(loadBusPositions, 3000);
             </script>
         </div>

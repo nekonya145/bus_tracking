@@ -12,36 +12,72 @@
             <h4 class="fw-bold">Live Monitoring</h4>
             <div id="map" class="rounded shadow-lg" style="min-height: 50vh;"></div>
             <script>
-            const map = L.map('map').setView([-4.132041466037736, 120.03455798756075], 15);
-            const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              const map = L.map('map');
+              const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 20,
-                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            }).addTo(map);
+              }).addTo(map);
 
-            const busIcon = L.icon({
+              const busIcon = L.icon({
                 iconUrl: '{{ asset('img/marker.png') }}',
                 iconSize: [38, 38],
                 iconAnchor: [20, 20],
                 popupAnchor: [0, -20],
-            });
-
-            const busses = {!! json_encode($busses) !!};
-            const routes = {!! json_encode($routes) !!};
-
-            Object.entries(busses).forEach(([key, bus]) => {
-              const [lat, lng] = bus.koordinat.split(',').map(coord => parseFloat(coord.trim()));
-              const marker = L.marker([lat, lng], { icon: busIcon }).addTo(map);
-
-              marker.on('click', function () {
-                  const routeInfo = routes[bus.route_id] || {};
-                  document.getElementById('platNomor').textContent = bus.plat;
-                  document.getElementById('ruteAktif').textContent = routeInfo.rute || 'Rute tidak ditemukan';
-                  document.getElementById('kodeBus').textContent = bus.namabus;
               });
-            });
+
+              const statusColor = {
+                'TERSEDIA': 'green',
+                'FULL': 'red',
+                'MAINTENANCE': 'orange',
+              };
+
+              const busMarkers = {}; // Menyimpan marker per bus.id
+              let mapInitialized = false;
+
+              function loadBusPositions() {
+                fetch('/api/buses')
+                  .then(res => res.json())
+                  .then(response => {
+
+                    const busData = response.data.buses;
+                    const bounds = [];
+
+                    busData.forEach(bus => {
+                    const lat = parseFloat(bus.latitude);
+                    const lng = parseFloat(bus.longitude);
+                    bounds.push([lat, lng]);
 
 
-            map.on('click', onMapClick);
+                    if (busMarkers[bus.id]) {
+                        busMarkers[bus.id].setLatLng([lat, lng]);
+                      } else {
+                        const marker = L.marker([lat, lng], { icon: busIcon }).addTo(map);
+                        busMarkers[bus.id] = marker;
+
+                        marker.on('click', function () {
+                          document.getElementById('platNomor').textContent = bus.plat ?? '-';
+                          document.getElementById('ruteAktif').textContent = bus.nama_route ?? 'Rute tidak ditemukan';
+                          document.getElementById('kodeBus').textContent = bus.nama_bus ?? '-';
+                        });
+                      }
+                    });
+
+                    if (!mapInitialized) {
+                      if (bounds.length > 0) {
+                        map.fitBounds(bounds, {
+                          padding: [50, 50],
+                          maxZoom: 16
+                        });
+                      } else {
+                        map.setView([-5.135399, 119.423790], 15);
+                      }
+                      mapInitialized = true;
+                    }
+                  });
+              }
+
+              loadBusPositions();
+
+              setInterval(loadBusPositions, 3000);
             </script>
         </div>
 
