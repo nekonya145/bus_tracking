@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('nama_bus');
             $table->string('plat', 40)->unique();
-            $table->string('latitude');
-            $table->string('longitude');
+            $table->string('latitude')->default('-5.132969');
+            $table->string('longitude')->default('119.515476');
             $table->enum('status', ['TERSEDIA', 'FULL', 'MAINTENANCE'])->default('TERSEDIA');
             $table->foreignId('driver_id')->nullable()
                   ->constrained('users')

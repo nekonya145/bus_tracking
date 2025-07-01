@@ -34,7 +34,23 @@ class BusController
 
     public function tambah_bus(Request $request)
     {
+        $request->validate([
+            'nama_bus' => 'required|string|max:255',
+            'plat'     => 'required|string|max:100',
+            'status'    => 'required|in:TERSEDIA,FULL,MAINTENANCE',
+            'driver_id' => 'nullable|exists:users,id',
+            'route_id'  => 'nullable|exists:routes,id',
+        ]);
 
+        Bus::create([
+            'nama_bus'  => $request->input('nama_bus'),
+            'plat'      => $request->input('plat'),
+            'status'    => $request->input('status'),
+            'driver_id' => $request->input('driver_id') ?: null,
+            'route_id'  => $request->input('route_id') ?: null,
+        ]);
+
+        return redirect()->back()->with('success', 'Data bus berhasil Ditambahkan.');
     }
 
     public function update(Request $request)

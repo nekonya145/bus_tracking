@@ -100,7 +100,7 @@
 
 
     {{-- MODAL --}}
-    {{-- <div class="modal fade" id="tambahBus" tabindex="-1">
+    <div class="modal fade" id="tambahBus" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form action="{{ route('bus.store') }}" method="POST">
@@ -133,6 +133,7 @@
                                 @foreach($drivers as $driver)
                                     <option value="{{ $driver->id }}">{{ $driver->name }}</option>
                                 @endforeach
+                                    <option value="">-</option>
                             </select>
                         </div>
                         <div class="mb-3">
@@ -141,6 +142,7 @@
                                 @foreach($routes as $route)
                                     <option value="{{ $route->id }}">{{ $route->nama_rute }}</option>
                                 @endforeach
+                                    <option value="">-</option>
                             </select>
                         </div>
                     </div>
@@ -152,7 +154,7 @@
                 </form>
             </div>
         </div>
-    </div> --}}
+    </div>
 
     <div class="modal fade" id="editBusModal" tabindex="-1">
         <div class="modal-dialog">
