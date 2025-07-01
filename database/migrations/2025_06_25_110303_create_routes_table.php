@@ -14,14 +14,17 @@ return new class extends Migration
         Schema::create('routes', function (Blueprint $table) {
             $table->id();
             $table->string('nama_rute')->unique();
-            $table->string('sekolah_latitude');
-            $table->string('sekolah_longitude');
-            $table->string('p1_latitude');
-            $table->string('p1_longitude');
-            $table->string('p2_latitude');
-            $table->string('p2_longitude');
-            $table->string('p3_latitude');
-            $table->string('p3_longitude');
+            $table->decimal('sekolah_latitude', 10, 7)->default('-5.136723');
+            $table->decimal('sekolah_longitude', 10, 7)->default('119.514976');
+            $table->text('nama_halte1');
+            $table->text('nama_halte2');
+            $table->text('nama_halte3');
+            $table->decimal('p1_latitude', 10, 7);
+            $table->decimal('p1_longitude', 10, 7);
+            $table->decimal('p2_latitude', 10, 7);
+            $table->decimal('p2_longitude', 10, 7);
+            $table->decimal('p3_latitude', 10, 7);
+            $table->decimal('p3_longitude', 10, 7);
             $table->time('time_start');
             $table->time('time_end');
             $table->timestamps();

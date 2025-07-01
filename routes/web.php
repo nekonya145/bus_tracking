@@ -21,7 +21,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/bus/{id}', [BusController::class, 'update'])->name('bus.update');
     Route::delete('/bus/{id}', [BusController::class, 'hapus'])->name('bus.destroy');
 
-    // Route::post('/rute', [BusController::class, 'tambah_bus'])->name('bus.store');
+    Route::post('/rute', [RuteController::class, 'tambah_rute'])->name('rute.store');
     Route::put('/rute/{id}', [RuteController::class, 'update'])->name('rute.update');
     Route::delete('/rute/{id}', [RuteController::class, 'hapus'])->name('rute.destroy');
 });

@@ -72,11 +72,12 @@
     {{-- BARIS KEDUA --}}
     <div class="row align-items-center justify-content-center px-3">
       <div class="col-sm-6 d-flex justify-content-center">
-      <button type="button" class="btn btn-primary m-0" data-bs-toggle="modal" data-bs-target="#tambahJadwalBus">Tambah Jadwal</button>
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahRuteModal">
+          Tambah Rute
+      </button>
       </div>
     </div>
     </div>
-
 
     {{-- MODAL --}}
     <div class="modal fade" id="editJadwalBus" tabindex="-1">
@@ -110,6 +111,78 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                         <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="tambahRuteModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form action="{{ route('rute.store') }}" method="POST">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title">Tambah Rute</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Nama Rute</label>
+                            <input type="text" name="nama_rute" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Nama Halte 1</label>
+                            <input type="text" name="nama_halte1" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Nama Halte 2</label>
+                            <input type="text" name="nama_halte2" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Nama Halte 3</label>
+                            <input type="text" name="nama_halte3" class="form-control">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label">Lat P1</label>
+                            <input type="text" name="p1_latitude" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Long P1</label>
+                            <input type="text" name="p1_longitude" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Lat P2</label>
+                            <input type="text" name="p2_latitude" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Long P2</label>
+                            <input type="text" name="p2_longitude" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Lat P3</label>
+                            <input type="text" name="p3_latitude" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Long P3</label>
+                            <input type="text" name="p3_longitude" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Waktu Start</label>
+                            <input type="time" name="time_start" class="form-control" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Waktu End</label>
+                            <input type="time" name="time_end" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer mt-2">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan Rute</button>
                     </div>
                 </form>
             </div>

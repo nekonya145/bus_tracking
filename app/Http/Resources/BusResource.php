@@ -25,6 +25,17 @@ class BusResource extends JsonResource
             'status' => $this->status,
             'time_start' => $this->route->time_start ?? '-',
             'time_end' => $this->route->time_end ?? '-',
+            'nama_halte1' => $this->route->nama_halte1 ?? '-',
+            'nama_halte2' => $this->route->nama_halte2 ?? '-',
+            'nama_halte3' => $this->route->nama_halte3 ?? '-',
+            'sekolah_latitude' => $this->route->sekolah_latitude ?? '-',
+            'sekolah_longitude' => $this->route->sekolah_longitude ?? '-',
+            'route1_latitude' => $this->route->p1_latitude ?? '-',
+            'route1_longitude' => $this->route->p1_longitude ?? '-',
+            'route2_latitude' => $this->route->p2_latitude ?? '-',
+            'route2_longitude' => $this->route->p2_longitude ?? '-',
+            'route3_latitude' => $this->route->p3_latitude ?? '-',
+            'route3_longitude' => $this->route->p3_longitude ?? '-',
         ];
     }
 }
