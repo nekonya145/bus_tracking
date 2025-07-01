@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BusController;
 use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RuteController;
 
 Route::get('/login', [ProfileController::class, 'login'])->name('login')->middleware('guest');
 Route::post('/login', [ProfileController::class, 'masuk'])->middleware('guest');
@@ -19,4 +20,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/bus', [BusController::class, 'tambah_bus'])->name('bus.store');
     Route::put('/bus/{id}', [BusController::class, 'update'])->name('bus.update');
     Route::delete('/bus/{id}', [BusController::class, 'hapus'])->name('bus.destroy');
+
+    // Route::post('/rute', [BusController::class, 'tambah_bus'])->name('bus.store');
+    Route::put('/rute/{id}', [RuteController::class, 'update'])->name('rute.update');
+    Route::delete('/rute/{id}', [RuteController::class, 'hapus'])->name('rute.destroy');
 });

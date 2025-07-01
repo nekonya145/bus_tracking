@@ -77,7 +77,6 @@
                       </td>
                   </tr>
                   @empty
-                  {{-- Ini akan ditampilkan jika tidak ada data bus sama sekali --}}
                   <tr>
                       <td colspan="5" class="text-center py-4">
                           <p class="text-secondary mb-0">Belum ada data bus yang ditambahkan.</p>

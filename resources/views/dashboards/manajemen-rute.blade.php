@@ -1,5 +1,18 @@
 <x-layout>
   <x-slot:namepage>{{ $namepage }}</x-slot:namepage>  
+
+  @if(session()->has('success'))
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <p class="text-white mb-0">{{ session('success') }}</p>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  @endif
+  @if(session()->has('error'))
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <p class="text-white mb-0">{{ session('error') }}</p>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  @endif
   
   <div class="container-fluid py-4 mt-2" style="background-image: url('{{ asset('img/Nomads Map.png') }}'); background-repeat: no-repeat; background-size: contain; background-position: center; min-height: 92vh;">
   <h4 class="text-end me-4">Manajemen Jadwal</h4>
@@ -32,8 +45,22 @@
                   <span class="text-xs font-weight-bold">{{ $route->time_end }}</span>
                 </td>
                 <td class="align-middle">
-                  <a href="#" class="text-primary font-weight-bold text-xs me-2" data-bs-toggle="modal" data-bs-target="#editJadwalBus">Edit</a>
-                  <a href="#" class="text-danger font-weight-bold text-xs" onclick="return confirm('Yakin ingin menghapus?')">Hapus</a>
+                  <a href="#"
+                    class="text-primary font-weight-bold text-xs me-2 edit-rute-btn"
+                    data-bs-toggle="modal"
+                    data-bs-target="#editJadwalBus"
+                    data-id="{{ $route->id }}"
+                    data-nama_rute="{{ $route->nama_rute }}"
+                    data-jam_keberangkatan="{{ $route->time_start }}"
+                    data-jam_kepulangan="{{ $route->time_end }}"
+                    data-action="{{ route('rute.update', $route->id) }}">
+                    Edit
+                  </a>
+                  <form action="{{ route('rute.destroy', $route->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus?')">
+                      @csrf
+                      @method('DELETE')
+                      <button type="submit" class="btn btn-link text-danger font-weight-bold text-xs p-0 m-0">Hapus</button>
+                  </form>
                 </td>
               </tr>
               @endforeach
@@ -52,101 +79,62 @@
 
 
     {{-- MODAL --}}
-    <div class="modal fade" id="tambahJadwalBus" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-
-            <form action="/tambah-rute" method="POST">
-              @csrf
-              <div class="modal-header">
-                <h5 class="modal-title" id="modalTambahJadwalLabel">Tambah Jadwal Bus</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-
-                <div class="mb-3">
-                  <label for="nama_rute" class="form-label">Nama Rute</label>
-                  <input type="text" name="nama_rute" class="form-control @error('nama_rute') is-invalid @enderror" placeholder="Contoh: MBG XYZ" value="{{ old('nama_rute') }}" required>
-                  @error('nama_rute')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                  @enderror
-                </div>
-
-                <div class="mb-3">
-                  <label for="jalur_rute" class="form-label">Jalur Rute</label>
-                  <input type="text" name="jalur_rute"  class="form-control @error('jalur_rute') is-invalid @enderror" placeholder="Contoh: Berua - Pangkep" value="{{ old('jalur_rute') }}" required>
-                  @error('jalur_rute')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                  @enderror
-                </div>
-
-                <div class="row">
-                  <div class="col-md-6 mb-3">
-                    <label for="jam_keberangkatan" class="form-label">Waktu Berangkat</label>
-                    <input type="time" name="jam_keberangkatan" class="form-control @error('jam_keberangkatan') is-invalid @enderror" value="{{ old('jam_keberangkatan') }}" required>
-                    @error('jam_keberangkatan')
-                      <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                  </div>
-                  <div class="col-md-6 mb-3">
-                    <label for="jam_kepulangan" class="form-label">Waktu Pulang</label>
-                    <input type="time" name="jam_kepulangan" class="form-control @error('jam_kepulangan') is-invalid @enderror" value="{{ old('jam_kepulangan') }}" required>
-                    @error('jam_kepulangan')
-                      <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                  </div>
-                </div>
-
-                <div class="mb-3">
-                    <label for="hari_keberangkatan" class="form-label">Hari Keberangkatan</label>
-                    <select class="form-select @error('hari_keberangkatan') is-invalid @enderror" name="hari_keberangkatan" required>
-                      <option value="" disabled selected>-- Pilih Hari --</option>
-                      <option value="Senin" @if(old('hari_keberangkatan') == 'Senin') selected @endif>Senin</option>
-                      <option value="Selasa" @if(old('hari_keberangkatan') == 'Selasa') selected @endif>Selasa</option>
-                      <option value="Rabu" @if(old('hari_keberangkatan') == 'Rabu') selected @endif>Rabu</option>
-                      <option value="Kamis" @if(old('hari_keberangkatan') == 'Kamis') selected @endif>Kamis</option>
-                      <option value="Jumat" @if(old('hari_keberangkatan') == 'Jumat') selected @endif>Jumat</option>
-                      <option value="Sabtu" @if(old('hari_keberangkatan') == 'Sabtu') selected @endif>Sabtu</option>
-                      <option value="Minggu" @if(old('hari_keberangkatan') == 'Minggu') selected @endif>Minggu</option>
-                    </select>
-                    @error('hari_keberangkatan')
-                      <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="submit" class="btn btn-primary">Simpan Jadwal</button>
-              </div>
-            </form>
-
-        </div>
-      </div>
-    </div>
-
     <div class="modal fade" id="editJadwalBus" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <form action="/tambah-bus" method="POST">
-            @csrf
-            <div class="modal-header">
-              <h5 class="modal-title" id="modalTambahBusLabel">Edit Jadwal Bus</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="editRuteForm" action="" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Jadwal Rute</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        {{-- Nama Rute --}}
+                        <div class="mb-3">
+                            <label class="form-label">Nama Rute</label>
+                            <input type="text" id="edit_nama_rute" name="nama_rute" class="form-control" required>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Waktu Berangkat</label>
+                                <input type="time" id="edit_jam_keberangkatan" name="jam_keberangkatan" class="form-control" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Waktu Pulang</label>
+                                <input type="time" id="edit_jam_kepulangan" name="jam_kepulangan" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    </div>
+                </form>
             </div>
-            <div class="modal-body">
-              <input type="text" name="nama_bus" class="form-control" placeholder="Nama Bus">
-            </div>
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-primary">Simpan</button>
-            </div>
-          </form>
         </div>
-      </div>
     </div>
+
     
   </div>
   @include('partials/footer')
   </div>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+      const editButtons = document.querySelectorAll('.edit-rute-btn');
+      const form = document.getElementById('editRuteForm');
+
+      editButtons.forEach(button => {
+          button.addEventListener('click', () => {
+              form.action = button.getAttribute('data-action');
+              document.getElementById('edit_nama_rute').value = button.getAttribute('data-nama_rute');
+              document.getElementById('edit_jam_keberangkatan').value = button.getAttribute('data-jam_keberangkatan');
+              document.getElementById('edit_jam_kepulangan').value = button.getAttribute('data-jam_kepulangan');
+          });
+      });
+  });
+  </script>
 
 </x-layout>
