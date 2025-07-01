@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('password');
+            $table->string('password')->default(bcrypt('123'));
             $table->enum('role', ['admin', 'driver', 'siswa'])->default('siswa');
             $table->string('nomor_whatsapp', 15);
             $table->string('nisn', 20)->nullable()->unique();

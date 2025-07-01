@@ -9,6 +9,7 @@
         <x-aside-item href='/manajemen-bus' :isActive="request()->is('manajemen-bus')" icon="bus-front-12">Manajemen Bus</x-aside-item>
         <x-aside-item href='/rute-bus' :isActive="request()->is('rute-bus')" icon="calendar-grid-58">Rute Bus</x-aside-item>
         <x-aside-item href='/live-monitoring' :isActive="request()->is('live-monitoring')" icon="ambulance">Live Monitoring</x-aside-item>
+        <x-aside-item href='/siswas' :isActive="request()->is('siswas')" icon="ungroup">Siswas Settings</x-aside-item>
       </ul>
     </div>
 </aside>
