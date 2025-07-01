@@ -12,7 +12,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'nisn' => 'required',
+            'email' => 'required',
             'password' => 'required',
         ]);
 
@@ -22,7 +22,7 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $user = User::where('nisn', $request->nisn)->firstOrFail();
+        $user = User::where('email', $request->email)->firstOrFail();
         $user->tokens()->delete(); 
         $token = $user->createToken('auth_token')->plainTextToken;
 
