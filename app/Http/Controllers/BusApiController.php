@@ -54,27 +54,47 @@ class BusApiController extends Controller
      */
     public function update(Request $request, Bus $bus)
     {
-        // Validasi hanya untuk latitude & longitude
         $request->validate([
             'latitude'  => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
         ]);
 
-        // Update lokasi bus
         $bus->update([
             'latitude'  => $request->latitude,
             'longitude' => $request->longitude,
         ]);
 
-        // Response ke aplikasi mobile
         return response()->json([
             'status'  => 'success',
             'message' => 'Lokasi bus berhasil diperbarui.',
             'data'    => [
-                'id'        => $bus->id,
+                'nama_bus'  => $bus->nama_bus,
+                'plat'      => $bus->plat,
                 'latitude'  => $bus->latitude,
                 'longitude' => $bus->longitude,
                 'updated_at' => $bus->updated_at,
+            ]
+        ], 200);
+    }
+
+    public function update_status(Request $request, Bus $bus)
+    {
+        $request->validate([
+            'status'  => 'required|in:TERSEDIA,FULL,MAINTENANCE',
+        ]);
+
+        $bus->update([
+            'status'  => $request->status,
+        ]);
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Status bus berhasil diperbarui.',
+            'data'    => [
+                'nama_bus'  => $bus->nama_bus,
+                'plat'      => $bus->plat,
+                'status'    => $bus->status,
+                'updated_at'=> $bus->updated_at,
             ]
         ], 200);
     }

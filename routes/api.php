@@ -9,3 +9,4 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::apiResource('/buses', BusApiController::class);
+Route::put('/buses/update-status/{bus:plat}', [BusApiController::class, 'update_status']);

@@ -27,4 +27,10 @@ class Bus extends Model
     {
         return $this->belongsTo(Route::class);
     }
+
+    //CARI DEFAULTNYA BUKAN ID -> PLAT UNIQUE
+    public function getRouteKeyName()
+    {
+        return 'plat';
+    }
 }

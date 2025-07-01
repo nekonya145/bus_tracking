@@ -95,16 +95,18 @@
                     const lng = parseFloat(bus.longitude);
                     bounds.push([lat, lng]);
 
+                    const popupContent = `
+                      <b>${bus.nama_bus}</b><br>
+                      Rute: ${bus.nama_route ?? 'Tanpa Rute'}<br>
+                      Status: <span style="color:${statusColor[bus.status] ?? 'black'}"><b>${bus.status}</b></span>`;
+
                     if (busMarkers[bus.id]) {
                         busMarkers[bus.id].setLatLng([lat, lng]);
+                        busMarkers[bus.id].setPopupContent(popupContent);
                       } else {
                         const marker = L.marker([lat, lng], { icon: busIcon })
                           .addTo(map)
-                          .bindPopup(`
-                            <b>${bus.nama_bus}</b><br>
-                            Rute: ${bus.nama_route ?? 'Tanpa Rute'}<br>
-                            Status: <span style="color:${statusColor[bus.status] ?? 'black'}">${bus.status}</span>
-                          `);
+                          .bindPopup(popupContent);
                         busMarkers[bus.id] = marker;
                       }
                     });
